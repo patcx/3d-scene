@@ -28,6 +28,9 @@ class Graphic:
         self.normalAttrib = glGetAttribLocation(self.shader, "normal")
         glEnableVertexAttribArray(self.normalAttrib)
 
+        self.diffuseAttrib = glGetAttribLocation(self.shader, "diffuse")
+        glEnableVertexAttribArray(self.diffuseAttrib)
+
         glEnable(GL_DEPTH_TEST)
 
         self.lightDirectionUniform = glGetUniformLocation(self.shader, "uLightDirection")
@@ -35,14 +38,12 @@ class Graphic:
         self.modelMatrixUniform = glGetUniformLocation(self.shader, "uModelMatrix")
         self.viewMatrixUniform = glGetUniformLocation(self.shader, "uViewMatrix")
         self.projectionMatrixUniform = glGetUniformLocation(self.shader, "uProjectionMatrix")
-        self.diffuseColorUniform = glGetUniformLocation(self.shader, "diffuseColor")
-        self.ambientColorUniform = glGetUniformLocation(self.shader, "ambientColor")
 
     def draw(self, camera, objects):
 
         shaders.glUseProgram(self.shader)
         
-        lightDirection = [1, 1, 1, 0]
+        lightDirection = [1, 1, 3, 0]
         glUniform3f(self.lightDirectionUniform, lightDirection[0], lightDirection[1], lightDirection[2])
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
@@ -50,6 +51,8 @@ class Graphic:
         for obj in objects:
             glVertexAttribPointer(self.positionAttrib, 3, GL_FLOAT, False, 0, obj.vertices)
             glVertexAttribPointer(self.normalAttrib, 3, GL_FLOAT, False, 0, obj.normals)
+            glVertexAttribPointer(self.diffuseAttrib, 3, GL_FLOAT, False, 0, obj.diffuse)
+            
 
             rotationMatrix = obj.rotationMatrix
             transformationMatrix = obj.transformationMatrix
@@ -60,8 +63,6 @@ class Graphic:
             glUniformMatrix4fv(self.modelMatrixUniform, 1, GL_TRUE, array(transformationMatrix * rotationMatrix))
             glUniformMatrix4fv(self.viewMatrixUniform, 1, GL_TRUE, array(viewMatrix))
             glUniformMatrix4fv(self.projectionMatrixUniform, 1, GL_TRUE, projectionMatrix)
-            glUniform3fv(self.diffuseColorUniform, 1, obj.diffuse)
-            glUniform3fv(self.ambientColorUniform, 1, array(obj.diffuse)*0.2)
 
             glDrawElements(GL_TRIANGLES, obj.indexes.size, GL_UNSIGNED_SHORT, obj.indexes)
 

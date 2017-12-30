@@ -6,9 +6,9 @@ from OpenGL.arrays import vbo
 
 
 from graphic import *
-from car import *
-from tree import *
-from terrain import *
+from models.car import *
+from models.tree import *
+from models.terrain import *
 from camera import *
 
    
@@ -17,8 +17,11 @@ def main():
     gfx = Graphic('3D Scene', (800, 600))
    
     car = Car()
-    tree = Tree()
-    terrain = Terrain()
+    tree1 = Tree(2, 0, 0)
+    tree2 = Tree(3, 3, -3)
+    tree3 = Tree(2.5, -3, -3)
+    tree4 = Tree(2.5, -5, 10)
+    terrain = Terrain(30)
 
     camera = Camera(gfx.screenHeight/gfx.screenWidth, 45)
     
@@ -37,12 +40,12 @@ def main():
                     camera.setType(CameraType.MOVING_FOLLOWING)
 
         car.update()
-        tree.update()
+
         terrain.update()
 
         camera.update(car)
 
-        gfx.draw(camera, [car, tree, terrain])
+        gfx.draw(camera, [car, tree1, tree2, tree3, tree4, terrain])
 
         pygame.display.flip()
         pygame.time.wait(10)
