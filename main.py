@@ -14,7 +14,7 @@ from camera import *
    
 def main():
 
-    gfx = Graphic('3D Scene', (800, 600))
+    gfx = Graphic('3D Scene', (1200, 700))
    
     car = Car()
     tree1 = Tree(2, 0, 0)
@@ -25,6 +25,7 @@ def main():
 
     camera = Camera(gfx.screenHeight/gfx.screenWidth, 45)
     
+    clock = pygame.time.Clock()
 
     while True:
         for event in pygame.event.get():
@@ -48,7 +49,8 @@ def main():
         gfx.draw(camera, [car, tree1, tree2, tree3, tree4, terrain])
 
         pygame.display.flip()
-        pygame.time.wait(10)
+        clock.tick(45)
+        
 
 
 main()

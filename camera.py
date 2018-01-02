@@ -48,8 +48,8 @@ class Camera:
     def update(self, obj):
 
         if self.cameraType == CameraType.STATIC:
-            self.lookAt([20, -10, 15], [0, 0, 0], [0, 0, 1])
+            self.lookAt([25, -10, 10], [0, 0, 0], [0, 0, 1])
         elif self.cameraType == CameraType.MOVING_FOLLOWING:
-            self.lookAt([obj.getX()+0.1, obj.getY(), 20], [obj.getX(), obj.getY(), 0], [0, 0, 1])
+            self.lookAt([obj.getX()+0.1, obj.getY(), 40], [obj.getX(), obj.getY(), 0], [0, 0, 1])
         elif self.cameraType == CameraType.FOLLOWING:
-            self.lookAt([20, -10, 15], [obj.getX(), obj.getY(), 0], [0, 0, 1])
+            self.lookAt([25, -10, 15], [obj.getX(), obj.getY(), 0], [0, 0, 1])

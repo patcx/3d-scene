@@ -9,7 +9,7 @@ class Graphic:
 
     def __init__(self, caption, resolution):
         pygame.init()
-        pygame.display.set_mode(resolution, pygame.DOUBLEBUF|pygame.OPENGL)
+        self.screen =  pygame.display.set_mode(resolution, pygame.DOUBLEBUF|pygame.OPENGL)
         pygame.display.set_caption(caption)
         self.screenWidth = resolution[0]
         self.screenHeight = resolution[1]
