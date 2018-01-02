@@ -7,11 +7,12 @@ class Car(Model):
     def __init__(self):
 
         self.light = CarLightSource()
-        self.light.setPosition([3, 0, 0, 1])
+        self.light.setPosition([3.2, 0, 0.5, 1])
         self.light.setDirection([1, 0, -2, 1])
 
         self.beaconLight = CarBeaconLightSource()
         self.beaconLight.setPosition([0, 0, 1, 1])
+        self.beaconLight.disabled = True
 
         v0 = [-2, -1, -0.5]
         v1 = [-2, 1, -0.5]

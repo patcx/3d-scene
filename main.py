@@ -48,6 +48,12 @@ def main():
                     camera.setType(CameraType.FOLLOWING)
                 if event.key == pygame.K_F3:
                     camera.setType(CameraType.MOVING_FOLLOWING)
+                if event.key == pygame.K_SPACE:
+                    car.getBeaconLight().disabled = not car.getBeaconLight().disabled  
+                if event.key == pygame.K_1:
+                    gfx.useBlinn = not gfx.useBlinn            
+                  
+                        
 
         car.update()
 

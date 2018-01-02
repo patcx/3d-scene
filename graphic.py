@@ -11,13 +11,14 @@ class Graphic:
 
     def __init__(self, caption, resolution):
         pygame.init()
+        self.useBlinn = 0
         self.screen =  pygame.display.set_mode(resolution, pygame.DOUBLEBUF|pygame.OPENGL)
         pygame.display.set_caption(caption)
         self.screenWidth = resolution[0]
         self.screenHeight = resolution[1]
 
-        fragmentShaderSource = open("shaders/shader.frag", "r")
-        vertexShaderSource = open("shaders/shader.vert", "r")
+        fragmentShaderSource = open("shaders/phong.frag", "r")
+        vertexShaderSource = open("shaders/phong.vert", "r")
 
         VERTEX_SHADER = shaders.compileShader(vertexShaderSource.read(), GL_VERTEX_SHADER)
         FRAGMENT_SHADER = shaders.compileShader(fragmentShaderSource.read(), GL_FRAGMENT_SHADER)
@@ -39,6 +40,7 @@ class Graphic:
         self.modelMatrixUniform = glGetUniformLocation(self.shader, "uModelMatrix")
         self.viewMatrixUniform = glGetUniformLocation(self.shader, "uViewMatrix")
         self.projectionMatrixUniform = glGetUniformLocation(self.shader, "uProjectionMatrix")
+        self.useBlinnUniform = glGetUniformLocation(self.shader, "useBlinn")
 
     def draw(self, camera, objects):
 
@@ -47,10 +49,15 @@ class Graphic:
 
         i = 0
         for light in self.lightSources:
+            intensity = light.intensity
+            spotCutOff = light.spotCutOff
+            if light.disabled:
+                intensity = 0
+                spotCutOff = 1
             glUniform4fv(glGetUniformLocation(self.shader, "uLights[{0}].position".format(i)), 1, light.position)
             glUniform4fv(glGetUniformLocation(self.shader, "uLights[{0}].spotDirection".format(i)), 1, light.direction)
-            glUniform1f(glGetUniformLocation(self.shader, "uLights[{0}].spotCutOff".format(i)), light.spotCutOff)
-            glUniform1f(glGetUniformLocation(self.shader, "uLights[{0}].intensity".format(i)), light.intensity)
+            glUniform1f(glGetUniformLocation(self.shader, "uLights[{0}].spotCutOff".format(i)), spotCutOff)
+            glUniform1f(glGetUniformLocation(self.shader, "uLights[{0}].intensity".format(i)), intensity)
             i += 1
 
         for obj in objects:
@@ -64,6 +71,7 @@ class Graphic:
             viewMatrix = camera.viewMatrix
             projectionMatrix = array(camera.projectionMatrix)
 
+            glUniform1i(self.useBlinnUniform, self.useBlinn)     
             glUniformMatrix3fv(self.normalMatrixUniform, 1, GL_TRUE, array(transpose(linalg.inv(rotationMatrix[0:3,0:3]))))
             glUniformMatrix4fv(self.modelMatrixUniform, 1, GL_TRUE, array(transformationMatrix * rotationMatrix))
             glUniformMatrix4fv(self.viewMatrixUniform, 1, GL_TRUE, array(viewMatrix))

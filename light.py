@@ -5,6 +5,7 @@ class LightSource:
     direction = array([1, 0, -1, 1])
     spotCutOff = 0.4
     intensity = 1
+    disabled = False
 
     def setPosition(self, v):
         self.position = v
