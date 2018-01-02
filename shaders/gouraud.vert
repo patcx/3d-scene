@@ -11,15 +11,27 @@ uniform LightSource uLights[MAX_LIGHTS];
 
 uniform int useBlinn;
 
-in vec4 vertex;
-in vec4 v;
-in vec3 n;
-in vec3 fragDiffuse;
+uniform mat4 uModelMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 uProjectionMatrix;
+uniform mat3 uNormalMatrix;
+
+in vec4 position;
+in vec3 normal;
+in vec3 diffuse;
+
+varying out vec3 color;
+
 
 void main() 
-{   
+{ 
+    vec3 n = normalize(uNormalMatrix*normal);
+    vec4 vertex = uModelMatrix * position;
+    vec4 v = uViewMatrix * vertex;
+
+
     float shininess = 20;
-    vec3 finalColor = 0.2 * fragDiffuse;
+    vec3 finalColor = 0.2 * diffuse;
     for(int i=0; i<MAX_LIGHTS; i++)
     {
         vec3 l = normalize(uLights[i].position - vertex);
@@ -28,10 +40,9 @@ void main()
         vec3 r = normalize(reflect(l,n)); 
         vec3 H = normalize((l+v)/abs(l+v)); 
 
-
         if (dot(sd,l) > uLights[i].spotCutOff) 
         {
-            vec3 Idiff = uLights[i].intensity * max(dot(n,l), 0.0) * fragDiffuse;
+            vec3 Idiff = uLights[i].intensity * max(dot(n,l), 0.0) * diffuse;
             Idiff = clamp(Idiff, 0.0, 1.0); 
             vec3 Ispec;
 
@@ -46,5 +57,6 @@ void main()
         }
     }
 
-    gl_FragColor = clamp(vec4(finalColor, 1), 0, 1); 
+    color = clamp(finalColor, 0, 1);
+    gl_Position = uProjectionMatrix * v;
 }

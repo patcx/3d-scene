@@ -17,8 +17,13 @@ class Graphic:
         self.screenWidth = resolution[0]
         self.screenHeight = resolution[1]
 
-        fragmentShaderSource = open("shaders/phong.frag", "r")
-        vertexShaderSource = open("shaders/phong.vert", "r")
+        glEnable(GL_DEPTH_TEST)
+
+        self.loadShader("phong") 
+
+    def loadShader(self, filename):
+        fragmentShaderSource = open("shaders/{0}.frag".format(filename), "r")
+        vertexShaderSource = open("shaders/{0}.vert".format(filename), "r")
 
         VERTEX_SHADER = shaders.compileShader(vertexShaderSource.read(), GL_VERTEX_SHADER)
         FRAGMENT_SHADER = shaders.compileShader(fragmentShaderSource.read(), GL_FRAGMENT_SHADER)
@@ -34,7 +39,6 @@ class Graphic:
         self.diffuseAttrib = glGetAttribLocation(self.shader, "diffuse")
         glEnableVertexAttribArray(self.diffuseAttrib)
 
-        glEnable(GL_DEPTH_TEST)
 
         self.normalMatrixUniform = glGetUniformLocation(self.shader, "uNormalMatrix")
         self.modelMatrixUniform = glGetUniformLocation(self.shader, "uModelMatrix")
