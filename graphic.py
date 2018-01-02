@@ -5,7 +5,9 @@ from OpenGL.GLU import *
 from OpenGL.GL import shaders
 
 
+
 class Graphic:
+    lightSources = list()
 
     def __init__(self, caption, resolution):
         pygame.init()
@@ -33,7 +35,6 @@ class Graphic:
 
         glEnable(GL_DEPTH_TEST)
 
-        self.lightDirectionUniform = glGetUniformLocation(self.shader, "uLightDirection")
         self.normalMatrixUniform = glGetUniformLocation(self.shader, "uNormalMatrix")
         self.modelMatrixUniform = glGetUniformLocation(self.shader, "uModelMatrix")
         self.viewMatrixUniform = glGetUniformLocation(self.shader, "uViewMatrix")
@@ -42,11 +43,15 @@ class Graphic:
     def draw(self, camera, objects):
 
         shaders.glUseProgram(self.shader)
-        
-        lightDirection = [1, 1, 3, 0]
-        glUniform3f(self.lightDirectionUniform, lightDirection[0], lightDirection[1], lightDirection[2])
-
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+
+        i = 0
+        for light in self.lightSources:
+            glUniform4fv(glGetUniformLocation(self.shader, "uLights[{0}].position".format(i)), 1, light.position)
+            glUniform4fv(glGetUniformLocation(self.shader, "uLights[{0}].spotDirection".format(i)), 1, light.direction)
+            glUniform1f(glGetUniformLocation(self.shader, "uLights[{0}].spotCutOff".format(i)), light.spotCutOff)
+            glUniform1f(glGetUniformLocation(self.shader, "uLights[{0}].intensity".format(i)), light.intensity)
+            i += 1
 
         for obj in objects:
             glVertexAttribPointer(self.positionAttrib, 3, GL_FLOAT, False, 0, obj.vertices)
@@ -67,5 +72,6 @@ class Graphic:
             glDrawElements(GL_TRIANGLES, obj.indexes.size, GL_UNSIGNED_SHORT, obj.indexes)
 
         shaders.glUseProgram(0)
+
 
         
