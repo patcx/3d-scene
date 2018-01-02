@@ -1,4 +1,4 @@
-#define MAX_LIGHTS 3
+#define MAX_LIGHTS 10
 
 struct LightSource {
     vec4 position;

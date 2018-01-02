@@ -27,6 +27,7 @@ def main():
     terrain = Terrain(30)
 
     gfx.lightSources.append(car.getLight())
+    gfx.lightSources.append(car.getBeaconLight())
     gfx.lightSources.append(lantern1.getLight())
     gfx.lightSources.append(lantern2.getLight())
 
