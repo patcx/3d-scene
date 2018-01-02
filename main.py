@@ -36,7 +36,6 @@ def main():
     
     clock = pygame.time.Clock()
 
-    usePhongShader = True
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -52,12 +51,12 @@ def main():
                 if event.key == pygame.K_SPACE:
                     car.getBeaconLight().disabled = not car.getBeaconLight().disabled  
                 if event.key == pygame.K_1:
-                    gfx.useBlinn = not gfx.useBlinn   
+                    gfx.useBlinn = False
                 if event.key == pygame.K_2:
-                    usePhongShader = not usePhongShader
-                    if usePhongShader:
+                    gfx.useBlinn = True  
+                if event.key == pygame.K_p:
                         gfx.loadShader("phong")
-                    else:
+                if event.key == pygame.K_g:
                         gfx.loadShader("gouraud")     
                   
                         
