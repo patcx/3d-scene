@@ -10,6 +10,7 @@ from models.car import *
 from models.tree import *
 from models.terrain import *
 from models.lantern import *
+from models.rock import *
 from camera import *
 
    
@@ -25,6 +26,9 @@ def main():
     lantern1 = Lantern(6, 3, 1, [-0.5, 0.5, -0.8])
     lantern2 = Lantern(6, -3, -10, [0.5, 0.5, -0.8])
     terrain = Terrain(30)
+    rock1 = Rock(0.5, 0, 12)
+    rock2 = Rock(0.2, 0, 10)
+    rock3 = Rock(1, 0, -2)
 
     gfx.lightSources.append(car.getLight())
     gfx.lightSources.append(car.getBeaconLight())
@@ -64,7 +68,7 @@ def main():
         car.update()
         terrain.update()
         camera.update(car)
-        gfx.draw(camera, [car, tree1, tree2, tree3, tree4, terrain, lantern1, lantern2])
+        gfx.draw(camera, [car, tree1, tree2, tree3, tree4, terrain, lantern1, lantern2, rock1, rock2, rock3])
         pygame.display.flip()
         clock.tick(45)
         
